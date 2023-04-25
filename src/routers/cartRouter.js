@@ -4,6 +4,11 @@ import cartManager from "../controllers/cart.manager.js"
 const router = Router();
 const manager = new cartManager()
 
+router.get('/', (req, res)=>{
+    const lista = manager.getCarts()
+    res.status(201).send(lista)
+})
+
 
 router.post("/" , (req , res) =>{
     manager.createCart()
@@ -12,9 +17,9 @@ router.post("/" , (req , res) =>{
 
 router.get("/:cid" , (req, res) =>{
     const cid= req.params.cid
-    const cartList = manager.getProductsFromACart(cid)
+    const cartList = manager.getCartById(cid)
     if(cartList == false){
-        res.send(`The cart ${cid} doesn't exist`)
+        res.send(`El carrito ${cid} no existe`)
     }else{
         res.send(cartList)
     }
