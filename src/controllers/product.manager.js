@@ -1,62 +1,102 @@
-import fs from "fs"
+import fs from "fs";
 
 class ProductManager {
-    
-    constructor(){
-        this.products = "./src/data/products.json"
-        this.index = 0
-    }
-    getProducts = () => {
-        const productsList = JSON.parse(fs.readFileSync(this.products, "utf-8"))
-        return(productsList);
-    }
-    
-    addProduct = (title , description , price , thumbnail , code , stock) => {
-        this.index++
-        const id = this.index
-        const product = {title , description , price , thumbnail , code , stock , id}
-        if ( !title || !description || !price || !thumbnail || !code || !stock || !id){
-            return console.log("faltan datos")
-        }
-        if (this.products.find(prod => prod.code === product.code)){
-            return console.log("El codigo ingresado ya pertenece a un producto cargado");
-        }
-        this.products.push(product)    
-        }
-    
-    getProductsById = (findId) => {
-        if (this.products.find(prod => prod.id === findId)) {
-            console.log("El Producto Buscado es:")
-            return this.products.find(prod => prod.id === findId)
-        }else{
-            console.log("Not found");
-        }
-        
-    }
-    updateProduct = (id,key,value)=>{
-        const productIndex = this.products.findIndex( prod => prod.id === id)
-        console.log("Funcion updateProduct");
-        if (productIndex != -1){
-            this.products[productIndex][key] = value
-            
-            fs.writeFileSync(this.path, JSON.stringify(list, null))
-            return console.log(`Actualizado producto con id ${id}`)
-        }else{
-            return console.log("Producto no encontrado");
-        }
-    }
-    deleteProduct = (id) =>{
-        const productDelete = this.products.findIndex( prod => prod.id === id)
-    
-        if (productDelete != -1){
-            this.products.splice(productDelete , 1)   
-            
-            fs.writeFileSync(this.path, JSON.stringify(list, null))
-        }else{
-            console.log("No se encontro el producto que desea eliminar");
-        }
-    }
+  constructor() {
+    this.products = "./src/data/products.json";
+  }
+  getProducts = () => {
+    const productsList = JSON.parse(fs.readFileSync(this.products, "utf-8"));
+    return productsList;
+  };
 
+  addProduct = (
+    title,
+    description,
+    price,
+    thumbnail,
+    code,
+    stock,
+    category
+  ) => {
+    const productsList = this.getProducts();
+    let id = 0;
+    let mayorId = 0;
+    for (let i = 0; i < productsList.length; i++) {
+      if (productsList[i].id > mayorId) {
+        mayorId = productsList[i].id;
+      }
     }
+    id = mayorId + 1;
+
+    const product = {
+      title,
+      description,
+      price,
+      thumbnail,
+      code,
+      stock,
+      id,
+      category,
+    };
+
+    if (
+      !product.title ||
+      !product.description ||
+      !product.price ||
+      !product.thumbnail ||
+      !product.code ||
+      !product.stock ||
+      !product.id ||
+      !product.category
+    ) {
+      return console.log("Faltan Datos");
+    }
+    if (productsList.find((prod) => prod.code === product.code)) {
+      return console.log(
+        "El codigo ingresado ya pertenece a un producto cargado"
+      );
+    }
+    productsList.push(product);
+    console.log(productsList);
+    fs.writeFileSync(this.products, JSON.stringify(productsList, null));
+  };
+
+  getProductsById = (pid) => {
+    const productsList = this.getProducts();
+    if (productsList.find((prod) => prod.id == pid)) {
+      return productsList.find((prod) => prod.id == pid);
+    } else {
+      return "Error al buscar el producto";
+    }
+  };
+
+  updateProduct = (id, data) => {
+    const productsList = this.getProducts();
+    const productIndex = productsList.findIndex((prod) => prod.id == id);  
+
+    if (productIndex != -1) {
+        productsList[productIndex] = {...productsList[productIndex], ...data}        
+      fs.writeFileSync(this.products, JSON.stringify(productsList, null));
+      return console.log(`Actualizado producto con id ${id}`);
+    } else {
+      return console.log("Producto no encontrado");
+    }
+  };
+
+
+  deleteProduct = (id) => {
+  
+    const productsList = this.getProducts();
+    const productDelete = productsList.findIndex((prod) => prod.id == id);
     
- export default ProductManager   
+    if (productDelete != -1) {
+        productsList.splice(productDelete, 1);
+
+      fs.writeFileSync(this.products, JSON.stringify(productsList, null));
+    } else {
+      console.log("No se encontro el producto que desea eliminar");
+    }
+  };
+}
+
+export default ProductManager;

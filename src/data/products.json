@@ -17,7 +17,7 @@
         "title": "Frame Completo",
         "thumbnails": ["https://res.cloudinary.com/dyksknsxc/image/upload/v1670078414/frame_un_bolsillo_v0byfm.jpg"],
         "description": "Alforja diseñada para llevar carga durante un viaje en conjunto con los otros sistemas o para usar a diario y evitar tener que llevar mochila.  Construcción de doble capa lo que la hace impermeable y muy resistente (si bien el material es impermeable las costuras no están selladas)   Volumen: Depende de cada cuadro y su geometria, oscilando generalmente entre los 4 y 8 litros de capacidad.  El ancho es diferencial, por lo que hacía el manubrio se amplia, esto da un mayor volumen de carga sin rozar en las piernas.  Se fija al cuadro por medio de multiples velcros logrando una sujeción muy firme pero a la vez muy simple y facil de quitar.    Todas las areas en contacto con el cuadro llevan acolchado interno con el fin de que los obejtos no golpeen el cuadro.  Apertura mediante cierre  impermeable YKK aquaguard.",
-        "code": "a1"
+        "code": "a2"
     },
     {
         "id": 3,
@@ -27,7 +27,7 @@
         "price": 8500,
         "category": "bajo asiento",
         "description": "Bolso bajo asiento con capacidad de 8 a 14 litros  ​  Confeccionado con materiales especificos para cada zona, reforzado y funcional.  ​  Lleva un pequeño estavilizador el cual va fijado a los rieles del asiento, esta pequeña pieza se adapta a la mayoria de los asientos y tiene un excelente rendimiento ya que le quita gran parte del movimiento que puede tener el bolso.",
-        "code": "a1"
+        "code": "a3"
     },
     {
         "id": 4,
@@ -37,7 +37,7 @@
         "title": "Frame Doble Bolsillo",
         "category": "frame bag",
         "description": "Alforja diseñada para llevar carga durante un viaje en conjunto con los otros sistemas o para usar a diario y evitar tener que llevar mochila.  Construcción de doble capa lo que la hace impermeable y muy resistente (si bien el material es impermeable las costuras no están selladas)   Volumen: Depende de cada cuadro y su geometria, oscilando generalmente entre los 4 y 8 litros de capacidad.  El ancho es diferencial, por lo que hacía el manubrio se amplia, esto da un mayor volumen de carga sin rozar en las piernas.  Se fija al cuadro por medio de multiples velcros logrando una sujeción muy firme pero a la vez muy simple y facil de quitar.    Todas las areas en contacto con el cuadro llevan acolchado interno con el fin de que los obejtos no golpeen el cuadro.  Apertura mediante cierre  impermeable YKK aquaguard.",
-        "code": "a1"
+        "code": "a4"
     },
     {
         "id": 5,
@@ -47,7 +47,7 @@
         "stock": 100,
         "title": "Bolso Stem",
         "price": 3600,
-        "code": "a1"
+        "code": "a5"
     },
     {
         "id": 6,
@@ -57,7 +57,7 @@
         "thumbnails": ["https://res.cloudinary.com/dyksknsxc/image/upload/v1670078574/alforja_de_manubrio_gajdqk.jpg"],
         "stock": 99,
         "price": 6800,
-        "code": "a1"
+        "code": "a6"
     },
     {
         "id": 7,
@@ -67,7 +67,7 @@
         "title": "Medio Frame Bag",
         "category": "frame bag",
         "stock": 95,
-        "code": "a1"
+        "code": "a7"
     },
     {
         "id": 8,
@@ -77,7 +77,7 @@
         "title": "Bajo Asiento 4L",
         "description": "Bolso bajo asiento marca Asgard con capacidad regulable de 2 a 4 litros. Ideal para salidas por el día. Va sujeto a la vela y los rieles del asiento, muy fácil de colocar o retirar. Refuerzo en la zona que tiene contacto con el asiento para mayor durabilidad. Fondo en lona pvc impermeable para salpicaduras y barro. Interior forrado en fluor. Cierre por medio de velcro y roll top. Cinta reflectiva en la parte trasera. Hebillas de resina acetal y cintas reforzadas.",
         "thumbnails": ["https://res.cloudinary.com/dyksknsxc/image/upload/v1670078414/bajo_asiento_4l_a996ni.jpg"],
-        "code": "a1"
+        "code": "a8"
     },
     {
         "id": 9,
@@ -87,6 +87,6 @@
         "thumbnails":[ "https://res.cloudinary.com/dyksknsxc/image/upload/v1670078414/Medio_Fram_dobleS_dbrqgj.jpg"],
         "stock": 100,
         "category": "frame bag",
-        "code": "a1"
+        "code": "a9"
     }
 ]

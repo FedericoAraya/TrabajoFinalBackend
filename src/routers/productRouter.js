@@ -15,9 +15,37 @@ router.get('/',(req, res)=>{
 
 router.get('/:pid', (req, res)=>{
     const pid= req.params.pid
-    const prodSelect= manager.getProductsById(+pid)
+    const prodSelect= manager.getProductsById(pid)
     res.send(prodSelect)
 })
+
+router.post('/', (req, res)=>{
+    const data = req.body
+    if(!data.title || !data.description || !data.price || !data.stock|| !data.category || !data.code || !data.category){
+        res.status(206).send("faltan datos")
+    }else{
+        const {title , description , price , thumbnail , code , stock, category} = data
+        manager.addProduct(title , description , price , thumbnail , code , stock, category)
+        res.status(201).send("Producto cargado con éxito")
+    }
+})
+
+router.put('/:id', (req, res)=>{
+    const pid = req.params.id
+    const data= req.body
+    manager.updateProduct(pid, data)
+    res.status(202).send("Producto Actualizado")
+})
+
+router.delete('/:pid', (req, res)=>{
+    const pid= req.params.pid
+    manager.deleteProduct(pid)
+    res.send("Producto eliminado")
+})
+
+
+
+
 
 
 
