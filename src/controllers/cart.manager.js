@@ -17,7 +17,7 @@ class CartManager{
         console.log(list)
         list.push(newCart)
         fs.writeFileSync(this.path, JSON.stringify(list, null))
-        console.log(`Cart ${parseInt(cid)} has been created`)
+        console.log(`El carrito  ${parseInt(cid)} fue creado`)
     }
   
 
@@ -41,7 +41,7 @@ class CartManager{
             list[cIndex].products[pIndex].quantity++
         }        
         fs.writeFileSync(this.path, JSON.stringify(list, null))
-        console.log(`The product ${pid} has been added to the cart ${cid}`)
+        console.log(`El producto ${pid} fue agregado al carrito ${cid}`)
     }
 
 
