@@ -1,3 +1,12 @@
 <div class="d-flex flex-row flex-wrap justify-content-evenly" style="height: 100%;">
-   {{prod}}   
+   {{#each list}}  
+              <div class="card" style="width: 18rem; margin: 10px">
+                <img class="card-img-top" src= {{this.thumbnails}} alt="Card image cap">
+                <div class="card-body"> 
+                  <h5 class="card-title">{{this.title}}</h5>
+                  <p class="card-text">{{this.price}}</p>
+                  <a href="#" class="btn btn-primary">Ver Mas</a>
+                </div>
+              </div>
+   {{/each}}
 </div>
