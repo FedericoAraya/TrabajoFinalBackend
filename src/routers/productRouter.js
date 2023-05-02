@@ -10,7 +10,25 @@ router.get('/',(req, res)=>{
     if(limit) {
         list = list.slice(0, limit)
     } 
-    res.send(list)
+   // res.send(list)   
+        res.render('productos', {            
+            prod :  list.map(function(prod) { 
+                const img = prod.thumbnails[0]     
+                return  `<div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="${prod.thumbnails[0]}" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">${prod.title}</h5>
+                  <p class="card-text">${prod.description}</p>
+                  <a href="#" class="btn btn-primary">Ver Mas</a>
+                </div>
+              </div> `  
+              }) 
+               
+                           
+       })
+    
+    
+    
 } )
 
 router.get('/:pid', (req, res)=>{
@@ -42,13 +60,5 @@ router.delete('/:pid', (req, res)=>{
     manager.deleteProduct(pid)
     res.send("Producto eliminado")
 })
-
-
-
-
-
-
-
-
 
 export default router
