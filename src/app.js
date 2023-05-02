@@ -9,6 +9,9 @@ const server = express();
 
 const httpServer = server.listen(8080, () => console.log('Server Up'));
 const socketServer = new Server(httpServer)
+socketServer.on('connection', () => {
+    console.log("Cliente Socket conectado..");
+})
 
 server.use(express.json())
 server.use(express.static( __dirname +'/public'))
@@ -19,6 +22,3 @@ server.engine('handlebars' , handlebars.engine())
 server.set('views' ,__dirname + '/views')
 server.set('view engine' , 'handlebars')
 
-socketServer.on('connection', () => {
-    console.log("Cliente Socket conectado..");
-})
