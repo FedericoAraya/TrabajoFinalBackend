@@ -1,0 +1,47 @@
+     
+     <h1>Crear nuevo producto</h1>
+    <form action="/api/realtimeproducts" method="post">
+      <div>
+        <label for="title">Título:</label>
+        <input type="text" name="title" id="title" required>
+      </div>
+      <div>
+        <label for="description">Descripción:</label>
+        <textarea name="description" id="description" required></textarea>
+      </div>
+      <div>
+        <label for="price">Precio:</label>
+        <input type="number" name="price" id="price" required>
+      </div>
+      <div>
+        <label for="thumbnails">URL de la imagen:</label>
+        <input type="text" name="thumbnails" id="thumbnails" required>
+      </div>
+      <div>
+        <label for="code">Código:</label>
+        <input type="text" name="code" id="code" required>
+      </div>
+      <div>
+        <label for="stock">Stock:</label>
+        <input type="number" name="stock" id="stock" required>
+      </div>
+      <div>
+        <label for="category">Categoría:</label>
+        <input type="text" name="category" id="category" required>
+      </div>
+      <button type="button" value="Enviar" onclick="enviarDatos()">Crear producto</button>
+    </form>
+<div class="d-flex flex-row flex-wrap justify-content-evenly" style="height: 100%;">
+   {{#each list}}  
+              <div class="card" style="width: 18rem; margin: 10px">
+                <img class="card-img-top" src= {{this.thumbnails}} alt="Card image cap">
+                <div class="card-body"> 
+                  <h5 class="card-title">{{this.title}}</h5>
+                  <p class="card-text">{{this.price}}</p>
+                  <a href="#" class="btn btn-primary">Ver Mas</a>
+                </div>
+              </div>
+   {{/each}}
+</div>
+ <script src="/socket.io/socket.io.js"></script>
+<script src="/js/socketClient.js"></script> 

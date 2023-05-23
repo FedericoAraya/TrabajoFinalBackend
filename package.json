@@ -3,14 +3,17 @@
     "bootstrap": "^5.2.3",
     "express": "^4.18.2",
     "express-handlebars": "^7.0.7",
+    "mongoose": "^7.2.0",
     "nodemon": "^2.0.22",
     "socket.io": "^4.6.1"
   },
   "name": "primerapreentrega",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/app.js",
   "type": "module",
   "scripts": {
+    "start": "node .",
+    "dev": "nodemon .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
