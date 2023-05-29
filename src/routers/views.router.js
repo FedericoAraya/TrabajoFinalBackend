@@ -1,6 +1,13 @@
 import { Router } from "express";
-const router = Router();
 
-router.get('/', (req, res) => res.render('home', {}))
+import productsModel from "../dao/models/product.model.js";
+
+const router = Router()
+
+
+router.get('/', async (req, res)=>{
+    const products = await productsModel.find().lean().exec()
+    res.render('home', {products})
+})
 
 export default router

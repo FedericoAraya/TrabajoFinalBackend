@@ -8,7 +8,7 @@ import handlebars from "express-handlebars";
 import routerViews from "./routers/views.router.js";
 import mongoose from "mongoose";
 
-//const uri = "URL DE MONGO"
+const uri = "mongodb+srv://federicoaraya:cCbvYRYjjNeDJR7v@asgard.0pnjaxo.mongodb.net/"
 
 const server = express();
 
