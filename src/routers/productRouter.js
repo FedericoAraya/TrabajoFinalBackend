@@ -1,122 +1,69 @@
 import { Router } from "express";
-//import ProductManager from "../dao/fsManager/productManager.js";
-import prodModel from '../dao/models/product.model.js';
+import { ProductManagerDB } from "../dao/Manager/productManagerDB.js";
 
-const router = Router();
 
-productsRouter.get('/', async (req,res)=>{
-  const products = await prodModel.find().lean().exec()
-  console.log(products)
-  res.render('list', {products})
-})
+const ProductRouter = Router();
+const prod = new ProductManagerDB();
 
-productsRouter.get('/update/:name', async (req, res) => {
-  const name = req.params.name
-  const products = await prodModel.findOne({ name }).lean().exec()
-  res.render('update', { products })
-})
-
-productsRouter.get('/create', (req,res)=>{
-  res.render('create',{})
-})
-
-productsRouter.get('/:name', async (req,res)=>{
-  const title= req.params.name
-  const products= await prodModel.findOne({title}).lean().exec()
-  res.render('one',{ products })
-})
-
-productsRouter.post('/', async (req,res)=>{
-  const productsNew =req.body
-  const productGenerated= new prodModel(productsNew)
-  await productGenerated.save()
-  res.redirect(`/products`)
-})
-
-productsRouter.put('/:name', async (req, res) => {
-  const name = req.params.name
-  console.log(name)
-  const productNewdata = req.body
-  console.log(productNewdata)
+ProductRouter.get("/", async (req, res) => {
+  let { limit = 10, page = 1, query, sort } = req.query;
   try {
-      await prodModel.updateOne({ name }, { ...productNewdata })
-  } catch(err) {
-      console.log('error.....')
-      res.send({err})
-  }
-})
-
-productsRouter.delete('/:name', async (req, res) => {
-  const name = req.params.name
-  try {
-      await productsModel.deleteOne({ name })
+      const productos = await prod.getProducts(limit, page, query, sort);
+      res.status(200).send(productos);
   } catch (err) {
-      res.send({err})
-  }
-}) 
-
-/*
-const manager = new ProductManager();
-
-router.get("/", (req, res) => {
-  const limit = req.query.limit;
-  let list = manager.getProducts();
-  if (limit) {
-    list = list.slice(0, limit);
-  }
-  res.render("home", {
-    list,   
-  });
-});
-
-router.get("/:pid", (req, res) => {
-  const pid = req.params.pid;
-  const prodSelect = manager.getProductsById(pid);
-  res.render("producto", {    
-    prodSelect
-  })
-});
-
-router.post("/", (req, res) => {
-  const data = req.body;
-console.log(data);
-  if (
-    !data.title ||
-    !data.description ||
-    !data.price ||
-    !data.stock ||
-    !data.thumbnails ||
-    !data.code ||
-    !data.category
-  ) {
-    res.status(206).send("faltan datos");
-  } else {
-    manager.addProduct(
-      title,
-      description,
-      price,
-      thumbnails,
-      code,
-      stock,
-      category
-    );
-    res.status(201).send("Producto cargado con éxito");
+      res.status(400).send(err);
   }
 });
-
-router.put("/:id", (req, res) => {
-  const pid = req.params.id;
-  const data = req.body;
-  manager.updateProduct(pid, data);
-  res.status(202).send("Producto Actualizado");
+ProductRouter.get("/:id", async (req, res) => {
+  let id = req.params.id;
+  try {
+      const foundprod = await prod.getProductById(id);
+      res.status(200).send(foundprod);
+  } catch (error) {
+      res.status(404).send({
+          error: "Producto no encontrado",
+          servererror: error,
+      });
+  }
+});
+ProductRouter.post("/", async (req, res) => {
+  const producto = req.body;
+  try {
+      const result = await prod.addProduct(producto);
+      if (result.error) {
+          res.status(400).send(result);
+      } else {
+          res.status(201).send(result);
+      }
+  } catch (err) {
+      res.status(400).send(err);
+  }
+});
+ProductRouter.put("/", async (req, res) => {
+  const producto = req.body;
+  try {
+      const result = await prod.updateProduct(producto);
+      if (result.error) {
+          res.status(400).send(result);
+      } else {
+          res.status(200).send(result);
+      }
+  } catch (err) {
+      res.status(400).send(err);
+  }
+});
+ProductRouter.delete("/:id", async (req, res) => {
+  let id = req.params.id;
+  try {
+      const result = await prod.deleteProduct(id);
+      if (result.error) {
+          res.status(400).send(result);
+      } else {
+          res.status(200).send(result);
+      }
+  } catch (err) {
+      res.status(400).send(err);
+  }
 });
 
-router.delete("/:pid", (req, res) => {
-  const pid = req.params.pid;
-  manager.deleteProduct(pid);
-  res.send("Producto eliminado");
-});
-*/
-
-
-export default router;
+export default ProductRouter;

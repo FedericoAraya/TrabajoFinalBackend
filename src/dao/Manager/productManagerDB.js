@@ -1,4 +1,4 @@
-import { prodModel } from "../models/product.model.js";
+import prodModel from "../models/product.model.js";
 
 class ProductManagerDB {
   getProducts = async (limit = 10, page = 1, query = "{}", sort) => {

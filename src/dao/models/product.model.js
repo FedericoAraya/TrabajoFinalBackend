@@ -34,7 +34,7 @@ const prodSchema = new mongoose.Schema({
         required: true,
     },
 });
-productSchema.plugin(mongoosePaginate);
+prodSchema.plugin(mongoosePaginate);
 
 const prodModel = mongoose.model(prodCollection, prodSchema)
 
