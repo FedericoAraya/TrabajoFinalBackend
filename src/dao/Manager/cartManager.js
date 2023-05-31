@@ -14,7 +14,6 @@ class CartManager{
         let cartList= this.getCarts()
         const cid= parseInt(this.generateId())
         const newCart= {cid, products:[]}
-        console.log(cartList)
         cartList.push(newCart)
         fs.writeFileSync(this.path, JSON.stringify(cartList, null))
         console.log(`El carrito  ${parseInt(cid)} fue creado`)

@@ -1,38 +1,83 @@
 import express from "express";
-import productRouter from "./routers/productRouter.js";
-import cartRouter from "./routers/cartRouter.js";
-import realTimeProductsRouter from "./routers/realTimeProductsRouter.js";
-import { Server } from "socket.io";
-import __dirname from "./utils.js";
 import handlebars from "express-handlebars";
-import routerViews from "./routers/views.router.js";
 import mongoose from "mongoose";
+import { Server } from "socket.io";
+import productRouter from "./routers/productRouter.js";
+import cartsRouter from "./routers/cartRouter.js";
+import homeRouter from "./routers/homeRouter.js";
+import realTimeProductsRouter from "./routers/realTimeProductsRouter.js";
+import chatRouter from "./routers/chat.router.js";
+import __dirname from "./utils.js";
+import messageModel from "./dao/models/message.model.js";
 
-const uri = "mongodb+srv://federicoaraya:cCbvYRYjjNeDJR7v@asgard.0pnjaxo.mongodb.net/"
+mongoose.set("strictQuery", false);
 
-const server = express();
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-server.engine("handlebars", handlebars.engine());
-server.set("views", __dirname + "/views");
-server.set("view engine", "handlebars");
+app.use("/", homeRouter);
+app.use(express.static(__dirname + "/public"));
 
-server.use(express.json());
-server.use(express.static(__dirname + "/public"));
-server.use("/", routerViews);
-server.use("/api/products", productRouter);
-server.use("/api/carts", cartRouter);
-server.use("/api/realtimeproducts", realTimeProductsRouter);
-server.use(express.urlencoded({ extended: true }));
+app.engine("handlebars", handlebars.engine());
+app.set("views", __dirname + "/views");
+app.set("view engine", "handlebars");
 
-mongoose.get("strictQuery", false);
+app.use("/realTimeProducts", realTimeProductsRouter);
+app.use("/api/products", productRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/chat", chatRouter);
+
+
 try {
-  await mongoose.connect(uri);
-  console.log("DB conectado");
-  const httpServer = server.listen(8080, () => console.log("Server Up"));
-  const socketServer = new Server(httpServer);
-  socketServer.on("connection", () => {
-    console.log("Socket client");
+  await mongoose.connect(
+    "mongodb+srv://federicoaraya:cCbvYRYjjNeDJR7v@asgard.0pnjaxo.mongodb.net/",
+    {
+      serverSelectionTimeoutMS: 5000,
+    }
+  );
+  console.log("DB conected");
+  const httpServer = app.listen(8080, () => {
+    console.log("Server UP");
   });
-} catch (err) {
-  console.log("No se puede conectar a DB");
+
+  const socketServer = new Server(httpServer);
+
+  socketServer.on("connection", (socketClient) => {
+    console.log("User conected");
+    socketClient.on("deleteProd", (prodId) => {
+      const result = prod.deleteProduct(prodId);
+      if (result.error) {
+        socketClient.emit("error", result);
+      } else {
+        socketServer.emit("products", prod.getProducts());
+        socketClient.emit("result", "Producto eliminado");
+      }
+    });
+    socketClient.on("addProd", (product) => {
+      const producto = JSON.parse(product);
+      const result = prod.addProduct(producto);
+      if (result.error) {
+        socketClient.emit("error", result);
+      } else {
+        socketServer.emit("products", prod.getProducts());
+        socketClient.emit("result", "Producto agregado");
+      }
+    });
+    socketClient.on("newMessage", async (message) => {
+      try {
+        let newMessage = await messageModel.create({
+          user: message.email.value,
+          message: message.message,
+        });
+        console.log("app", newMessage);
+        socketServer.emit("emitMessage", newMessage);
+      } catch (error) {
+        console.log(error);
+        socketClient.emit("error", error);
+      }
+    });
+  });
+} catch (error) {
+  console.log(error);
 }

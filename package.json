@@ -6,7 +6,8 @@
     "mongoose": "^7.2.1",
     "mongoose-paginate-v2": "^1.7.1",
     "nodemon": "^2.0.22",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "sweetalert2": "^11.7.9"
   },
   "name": "primerapreentrega",
   "version": "1.0.0",

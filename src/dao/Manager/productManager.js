@@ -57,7 +57,6 @@ class ProductManager {
       );
     }
     productsList.push(product);
-    console.log(productsList);
     fs.writeFileSync(this.products, JSON.stringify(productsList, null));
   };
 

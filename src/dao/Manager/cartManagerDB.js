@@ -1,5 +1,5 @@
-import { cartModel } from "../models/carts.model.js";
-import { prodModel } from "../models/product.model.js";
+import  cartsModel  from "../models/carts.model.js";
+import  prodModel  from "../models/product.model.js";
 
 class CartManagerDB {
   getCarts = async (limit = 10, page = 1, query = "{}", sort) => {
@@ -12,7 +12,7 @@ class CartManagerDB {
       }
     };
     const vquery = isValidJSON ? JSON.parse(query) : {};
-    const carts = cartModel.paginate(vquery, {
+    const carts = cartsModel.paginate(vquery, {
       page,
       limit,
       lean: true,
@@ -22,7 +22,7 @@ class CartManagerDB {
   };
   getCartById = async (cid) => {
     try {
-      const cartfound = await cartModel.findOne({ _id: cid }).lean().exec();
+      const cartfound = await cartsModel.findOne({ _id: cid }).lean().exec();
       if (cartfound === null) {
         return { error: 2, errortxt: "el carro no existe" };
       }
@@ -37,7 +37,7 @@ class CartManagerDB {
       products,
     };
     try {
-      const newCart = new cartModel(cart);
+      const newCart = new cartsModel(cart);
       newCart.save();
       return newCart;
     } catch (error) {
@@ -46,7 +46,7 @@ class CartManagerDB {
   };
   addProduct = async ({ cid, pid }) => {
     try {
-      const cartfound = await cartModel.findOne({ _id: cid });
+      const cartfound = await cartsModel.findOne({ _id: cid });
       if (cartfound === null) {
         return { error: 2, errortxt: "el carro no existe" };
       }
@@ -54,18 +54,18 @@ class CartManagerDB {
       if (prodexists === null) {
         return { error: 2, errortxt: "el producto no existe" };
       }
-      const prodfound = await cartModel.findOne({
+      const prodfound = await cartsModel.findOne({
         _id: cid,
         "products.product": pid,
       });
       if (prodfound === null) {
-        const addedprod = await cartModel.updateOne(
+        const addedprod = await cartsModel.updateOne(
           { _id: cid },
           { $addToSet: { products: { product: pid } } }
         );
         return addedprod;
       } else {
-        const updatedprod = await cartModel.updateOne(
+        const updatedprod = await cartsModel.updateOne(
           { _id: cid, "products.product": pid },
           { $inc: { "products.$.quantity": 1 } }
         );
@@ -78,7 +78,7 @@ class CartManagerDB {
   updateAllProducts = async (cid, products) => {
     console.log(cid, products);
     try {
-      const cartfound = await cartModel.findOne({ _id: cid });
+      const cartfound = await cartsModel.findOne({ _id: cid });
       if (cartfound === null) {
         return { error: 2, errortxt: "el carro no existe" };
       }
@@ -90,7 +90,7 @@ class CartManagerDB {
         _id: { $in: prodids },
       });
       if (prodexists.length === products.products.length) {
-        const updatedProducts = await cartModel.updateOne(
+        const updatedProducts = await cartsModel.updateOne(
           { _id: cid },
           { $set: { products: products.products } }
         );
@@ -114,11 +114,11 @@ class CartManagerDB {
           errortxt: "quantity tiene que ser un numero entero mayor que 0",
         };
       }
-      const cartfound = await cartModel.findOne({ _id: cid });
+      const cartfound = await cartsModel.findOne({ _id: cid });
       if (cartfound === null) {
         return { error: 2, errortxt: "el carro no existe" };
       }
-      const prodfound = await cartModel.findOne({
+      const prodfound = await cartsModel.findOne({
         _id: cid,
         "products.product": pid,
       });
@@ -141,11 +141,11 @@ class CartManagerDB {
   deleteAllProducts = async (cid) => {
     console.log(cid);
     try {
-      const cartfound = await cartModel.findOne({ _id: cid });
+      const cartfound = await cartsModel.findOne({ _id: cid });
       if (cartfound === null) {
         return { error: 2, errortxt: "el carro no existe" };
       }
-      const deletedProducts = await cartModel.updateOne(
+      const deletedProducts = await cartsModel.updateOne(
         { _id: cid },
         { $set: { products: [] } }
       );
@@ -156,11 +156,11 @@ class CartManagerDB {
   };
   deleteProduct = async ({ cid, pid }) => {
     try {
-      const cartfound = await cartModel.findOne({ _id: cid });
+      const cartfound = await cartsModel.findOne({ _id: cid });
       if (cartfound === null) {
         return { error: 2, errortxt: "el carro no existe" };
       }
-      const prodfound = await cartModel.findOne({
+      const prodfound = await cartsModel.findOne({
         _id: cid,
         "products.product": pid,
       });
@@ -170,7 +170,7 @@ class CartManagerDB {
           errortxt: "el producto no esta en el carro",
         };
       } else {
-        const updatedprods = await cartModel.updateOne(
+        const updatedprods = await cartsModel.updateOne(
           { _id: cid },
           { $pull: { products: { product: pid } } }
         );

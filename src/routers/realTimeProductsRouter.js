@@ -5,15 +5,12 @@ const router= Router()
 const manager= new ProductManager()
 
 const List= manager.getProducts()
-
-
 router.get('/', (req, res)=>{
     res.render('realTimeProducts', {List})
 })
 
 router.post("/", (req, res) => {
   const data = req.body;
-console.log(data);
   if (
     !data.title ||
     !data.description ||

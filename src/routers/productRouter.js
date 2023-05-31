@@ -8,8 +8,8 @@ const prod = new ProductManagerDB();
 ProductRouter.get("/", async (req, res) => {
   let { limit = 10, page = 1, query, sort } = req.query;
   try {
-      const productos = await prod.getProducts(limit, page, query, sort);
-      res.status(200).send(productos);
+      const productos = await prod.getProducts(limit, page, query, sort)
+      res.status(200).render("products",{productos});
   } catch (err) {
       res.status(400).send(err);
   }
@@ -17,8 +17,8 @@ ProductRouter.get("/", async (req, res) => {
 ProductRouter.get("/:id", async (req, res) => {
   let id = req.params.id;
   try {
-      const foundprod = await prod.getProductById(id);
-      res.status(200).send(foundprod);
+      const idprod = await prod.getProductById(id);
+      res.status(200).render("producto", {idprod});
   } catch (error) {
       res.status(404).send({
           error: "Producto no encontrado",

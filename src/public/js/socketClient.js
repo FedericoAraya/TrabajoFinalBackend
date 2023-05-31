@@ -1,8 +1,7 @@
-import ProductManager from "../../../controllers/productManager.js";
-const manager = new ProductManager()
-
 const socketClient= io()
 
+import ProductManager from "../../dao/Manager/productManager.js"
+const manager = new ProductManager()
 
 let createProd = document.getElementById("createProd")
 createProd.addEventListener("onClick", reviewList() )
@@ -25,13 +24,12 @@ const printList=(data)=>{
 }
 const reviewList=()=>{
     let pList= manager.getProducts()
-    socketClient.emit("productList", {pList})//Send products list
+    socketClient.emit("productList", {pList})
 }  
-socketClient.on('productList', pList =>{ //reciving pList
+socketClient.on('productList', pList =>{ 
     printList(pList)
     })
 
-//Init page
 const firstData= manager.getProducts()
 printList(firstData)
 
