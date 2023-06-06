@@ -1,12 +1,11 @@
 const socketClient = io();
 
 Swal.fire({
-    title: "Bienvenido al Chat",
+    title: "Registro chat",
     input: "email",
-    text: "Para ingresar dejanos tu email",
+    text: "Ingresa tu email",
     allowOutsideClick: false,
 }).then((email) => {
-    // busco todos los mensajes del usuario ingresado y les agrego el class mymessage
     const mymessages = document.querySelectorAll('*[user="'+email.value+'"');
     for (let i = 0; i < mymessages.length; i++) {
         mymessages[i].setAttribute("class", "message mymessage");
@@ -20,7 +19,6 @@ Swal.fire({
     addform.addEventListener("submit", (ev) => {
         ev.preventDefault();
         const message = ev.currentTarget.message.value;
-        // emito un evento para guardar el mensaje
         socketClient.emit("newMessage", {
             message,
             email,

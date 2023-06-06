@@ -1,47 +1,34 @@
-  <div class="d-flex flex-row flex-wrap justify-content-evenly" style="height: 100%;">
-   {{#each list.payload}}  
-              <div class="card" style="width: 18rem; margin: 10px">
-                <img class="card-img-top" src= {{this.thumbnails}} alt="Card image cap">
-                <div class="card-body"> 
-                  <h5 class="card-title">{{this.title}}</h5>
-                  <p class="card-text">{{this.price}}</p>
-                  <a href="#" class="btn btn-primary">Ver Mas</a>
-                </div>
-              </div>
-   {{/each}}
-</div id="createprod">   
-     <h1>Crear nuevo producto</h1>
-    <form action="/api/realtimeproducts" method="post">
-      <div>
-        <label for="title">Título:</label>
-        <input type="text" name="title" id="title" required>
-      </div>
-      <div>
-        <label for="description">Descripción:</label>
-        <textarea name="description" id="description" required></textarea>
-      </div>
-      <div>
-        <label for="price">Precio:</label>
-        <input type="number" name="price" id="price" required>
-      </div>
-      <div>
-        <label for="thumbnails">URL de la imagen:</label>
-        <input type="text" name="thumbnails" id="thumbnails" required>
-      </div>
-      <div>
-        <label for="code">Código:</label>
-        <input type="text" name="code" id="code" required>
-      </div>
-      <div>
-        <label for="stock">Stock:</label>
-        <input type="number" name="stock" id="stock" required>
-      </div>
-      <div>
-        <label for="category">Categoría:</label>
-        <input type="text" name="category" id="category" required>
-      </div>
-      <button type="button" value="Enviar" onclick="enviarDatos()">Crear producto</button>
-    </form>
+<h3>Productos en tiempo real</h3>
+<form id="addproduct">
+    <h4>Agregar producto en formato JSON</h4>
+    <textarea name="prodjson" id="prodjson" cols="20" rows="5"></textarea>
+    <button type="submit">Enviar</button>
+</form>
 
- <script src="/socket.io/socket.io.js"></script>
-<script src="../js/socketClient.js"></script> 
+<div id="realtimeproducts">
+    {{#each products}}
+        <div id="product{{this.id}}">
+            <h4>{{this.title}}</h4>
+            <img
+                src="{{this.thumbnails}}"
+                alt="foto producto"
+                width="100"
+            />
+            <p>{{this.description}}</p>
+            <p>Precio: ${{this.price}}</p>
+            <p>Categoría: {{this.category}}</p>
+            <p>Imagen: {{this.thumbnails}}</p>
+            <p>Status: {{this.status}}</p>
+            <p>Código: {{this.code}}</p>
+            <p>Stock: {{this.stock}}</p>
+            <input
+                type="button"
+                class="deleteproduct"
+                prodid="{{this.id}}"
+                value="Borrar este producto"
+            />
+        </div>
+    {{/each}}
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="../js/socketClient.js"></script>

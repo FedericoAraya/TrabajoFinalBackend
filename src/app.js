@@ -9,12 +9,32 @@ import realTimeProductsRouter from "./routers/realTimeProductsRouter.js";
 import chatRouter from "./routers/chat.router.js";
 import __dirname from "./utils.js";
 import messageModel from "./dao/models/message.model.js";
+import ProductManager from "./dao/Manager/ProductManager.js";
+import sessionRouter from "./routers/session.router.js";
 
+import bodyParser from "body-parser";
+import session from "express-session";
+import MongoStore from "connect-mongo";
+
+import cookieParser from "cookie-parser";
 mongoose.set("strictQuery", false);
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.use(bodyParser.urlencoded({ extended: true })); 
+
+app.use(cookieParser());
+app.use((session({
+  store: MongoStore.create({ 
+    mongoUrl: uri,
+    dbName: "test",
+    mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true }
+   }),
+   secret: "c0d3rhous3",
+   resave: true,
+   saveUninitialized: true 
+})));
 
 app.use("/", homeRouter);
 app.use(express.static(__dirname + "/public"));
@@ -27,7 +47,7 @@ app.use("/realTimeProducts", realTimeProductsRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/chat", chatRouter);
-
+app.use("/session/", sessionRouter);
 
 try {
   await mongoose.connect(
@@ -45,6 +65,7 @@ try {
 
   socketServer.on("connection", (socketClient) => {
     console.log("User conected");
+    const prod = new ProductManager("./src/data/productos.json");
     socketClient.on("deleteProd", (prodId) => {
       const result = prod.deleteProduct(prodId);
       if (result.error) {
