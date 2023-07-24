@@ -1,12 +1,12 @@
 import { Router } from "express";
-import userModel from "../model/user.model.js";
+import userModel from "../dao/models/users.model.js";
 
 const router = Router();
 
 router.get("/register", (req, res) => {
     const email = req.session.email;
     if (email) {
-      res.redirect("/products");
+      res.redirect("/api/products");
     } else {
       res.render("sessions/register");
     }
@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
 router.get("/login", (req, res) => {
   const email = req.session.email;
   if (email) {
-    res.redirect("/products");
+    res.redirect("/api/products");
   } else {
     res.render("sessions/login");
   }
@@ -40,7 +40,7 @@ router.post("/login", async (req, res) => {
       .render("errors/base", { error: "Invalid email or password" });
   } else {
     req.session.email = user.email;
-    res.redirect("/products");
+    res.redirect("/api/products");
   }
 });
 

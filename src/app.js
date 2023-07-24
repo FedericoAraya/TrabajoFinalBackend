@@ -27,11 +27,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use((session({
   store: MongoStore.create({ 
-    mongoUrl: uri,
+    mongoUrl: "mongodb+srv://federicoaraya:cCbvYRYjjNeDJR7v@asgard.0pnjaxo.mongodb.net/",
     dbName: "test",
     mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true }
    }),
-   secret: "c0d3rhous3",
+   secret: "c0d3r",
    resave: true,
    saveUninitialized: true 
 })));
@@ -47,7 +47,7 @@ app.use("/realTimeProducts", realTimeProductsRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/chat", chatRouter);
-app.use("/session/", sessionRouter);
+app.use("/session", sessionRouter);
 
 try {
   await mongoose.connect(
