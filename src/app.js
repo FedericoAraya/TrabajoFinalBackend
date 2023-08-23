@@ -11,7 +11,8 @@ import __dirname from "./utils.js";
 import messageModel from "./dao/models/message.model.js";
 import ProductManager from "./dao/Manager/ProductManager.js";
 import sessionRouter from "./routers/session.router.js";
-
+import swaggerJSDoc from "swagger-jsdoc"
+import SwaggerUiExpress from "swagger-ui-express"
 import bodyParser from "body-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -23,6 +24,19 @@ const app = express();
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: true })); 
+
+const swaggerOptions = {
+  definition:{
+      openapi: '3.0.1',
+      info:{
+          title: 'Documentación Ecommerce',
+          description:'Descripción de la documentación del proyecto de backend ecommerce'
+      }
+  },
+  apis:['./src/**/*.yaml']
+}
+
+const specs = swaggerJSDoc(swaggerOptions)
 
 app.use(cookieParser());
 app.use((session({
@@ -48,6 +62,7 @@ app.use("/api/products", productRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/chat", chatRouter);
 app.use("/session", sessionRouter);
+app.use('/docs',SwaggerUiExpress.serve,SwaggerUiExpress.setup(specs))
 
 try {
   await mongoose.connect(
