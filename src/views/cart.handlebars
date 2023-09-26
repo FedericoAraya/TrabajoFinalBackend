@@ -1,28 +1,30 @@
-<link rel="stylesheet" href="css/chatStyles.css">
-<div class="chat">
-    <h3>Chat MongoDB</h3>
-    <div class="chatbox" id="chatbox">
-        {{#each messages}}
-            <div class="message" user="{{this.user}}">
-                <div class="email">
-                    {{this.user}}
-                </div>
-                <div class="text">
-                    {{this.message}}
-                </div>
-                <div class="date">
-                    {{this.date}}
-                </div>
-            </div>
-        {{/each}}
-    </div>
-    <form id="newMessage">
-        <h4>Mensaje</h4>
-        <textarea name="message" id="message" cols="20" rows="1"></textarea>
-        <button type="submit">Enviar</button>
-    </form>
+    <div class="container">
+        <h1>Carrito de Compras</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre del Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr>
+                    <td>{{this.title}}</td>
+                    <td>${{this.price}} USD</td>
+                    <td>{{this.quantity}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
 
-</div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="../js/chatScocket.js"></script>
+        {{#if products.length}}
+        <p>Total del Carrito: ${{totalCartPrice}} USD</p>
+        <a class="checkout-button" href="/payment/create-checkout-session">Realizar Compra</a>
+        {{else}}
+        <p class="empty-cart">El carrito está vacío.</p>
+        {{/if}}
+
+        <a class="back-to-shop" href="/products">Volver a la Tienda</a>
+    </div>

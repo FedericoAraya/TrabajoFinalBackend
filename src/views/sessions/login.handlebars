@@ -2,6 +2,8 @@
 <form action="/session/login" method="post">
     Email: <input type="text" name="email" id="email" required><br>
     Contraseña: <input type="text" name="password" id="password" required><br>
-    <br><input type="submit" value="Login">
+    <br><input class="login-button" type="submit" value="Login">
+    <a class="login-with-github-link" href="/session/github/login">Iniciar Sesión con Github</a>
+    <a class="reset-password-link" href="/reset-password">Recuperar Contraseña</a>
 </form>
 <br><a href="/session/register">Registrarse</a>

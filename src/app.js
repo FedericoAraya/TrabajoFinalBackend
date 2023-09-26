@@ -1,119 +1,140 @@
-import express from "express";
-import handlebars from "express-handlebars";
-import mongoose from "mongoose";
-import { Server } from "socket.io";
-import productRouter from "./routers/productRouter.js";
-import cartsRouter from "./routers/cartRouter.js";
-import homeRouter from "./routers/homeRouter.js";
-import realTimeProductsRouter from "./routers/realTimeProductsRouter.js";
-import chatRouter from "./routers/chat.router.js";
-import __dirname from "./utils.js";
-import messageModel from "./dao/models/message.model.js";
-import ProductManager from "./dao/Manager/ProductManager.js";
-import sessionRouter from "./routers/session.router.js";
+import express from "express"
+import { Server } from "socket.io"
+import productRouter from "./router/products.router.js"
+import cartRouter from "./router/carts.router.js"
+import productViewRouter from "./router/productsView.router.js"
+import handlebars from "express-handlebars"
+import mongoose from "mongoose"
+import chatRouter from "./router/chat.router.js"
+import messagesModel from "./models/message.models.js"
+import sessionRouter from "./router/session.router.js"
+import session from "express-session"
+import passport from "passport"
+import initializePassport from "./config/passport.config.js"
+import { passportCall } from "./utils.js"
+import cookieParser from "cookie-parser"
+import dotenv from "dotenv"
+import config from './config/config.js'
+import MongoClient from "./config/MongoClient.js"
+import mockingRouter from "./router/mockingProducts.router.js"
+import errorMiddleware from "./middleware/errorMiddleware.js"
+import loggerRouter from './router/logger.router.js'
 import swaggerJSDoc from "swagger-jsdoc"
 import SwaggerUiExpress from "swagger-ui-express"
-import bodyParser from "body-parser";
-import session from "express-session";
-import MongoStore from "connect-mongo";
+import resetPasswordRoutes from './router/reset.router.js';
+import userPremiumRouter from './router/user.router.js'
+import adminRouter from './router/admin.router.js'
+import cartViewRouter from './router/cartsView.router.js'
+import cors from 'cors'
+import paymentRouter from './router/payments.router.js'
+import ticketRouter from './router/ticket.router.js'
+import userRouter from './router/user.router.js'
+import misDatosRouter from './router/datos.router.js'
 
-import cookieParser from "cookie-parser";
-mongoose.set("strictQuery", false);
 
-const app = express();
-app.use(express.json());
 
-app.use(bodyParser.urlencoded({ extended: true })); 
+dotenv.config()
+
+let client = new MongoClient()
 
 const swaggerOptions = {
-  definition:{
-      openapi: '3.0.1',
-      info:{
-          title: 'Documentación Ecommerce',
-          description:'Descripción de la documentación del proyecto de backend ecommerce'
-      }
-  },
-  apis:['./src/**/*.yaml']
+    definition:{
+        openapi: '3.0.1',
+        info:{
+            title: 'Documentacion Ecommerce',
+            description:'Descripcion de la documentacion del proyecto de backend ecommerce'
+        }
+    },
+    apis:['./docs/**/*.yaml']
 }
 
 const specs = swaggerJSDoc(swaggerOptions)
 
-app.use(cookieParser());
-app.use((session({
-  store: MongoStore.create({ 
-    mongoUrl: "mongodb+srv://federicoaraya:cCbvYRYjjNeDJR7v@asgard.0pnjaxo.mongodb.net/",
-    dbName: "test",
-    mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true }
-   }),
-   secret: "c0d3r",
-   resave: true,
-   saveUninitialized: true 
-})));
+const port = config.port || 3000
 
-app.use("/", homeRouter);
-app.use(express.static(__dirname + "/public"));
 
-app.engine("handlebars", handlebars.engine());
-app.set("views", __dirname + "/views");
-app.set("view engine", "handlebars");
+const app = express()
 
-app.use("/realTimeProducts", realTimeProductsRouter);
-app.use("/api/products", productRouter);
-app.use("/api/carts", cartsRouter);
-app.use("/chat", chatRouter);
-app.use("/session", sessionRouter);
+app.use(cors());
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
+
+app.engine('handlebars', handlebars.engine())
+
+app.set('views', './src/views')
+app.set('view engine', 'handlebars')
+app.use(express.static('./src/public'))
+app.get('/', (request, response) => {
+    response.send('Desafio 03!')
+})
+
+app.use(session({
+    secret: 'faraya',
+    resave: true,
+    saveUninitialized: true
+}))
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use('/session', sessionRouter)
+
+app.use('/api/products', passportCall('jwt'), productRouter)
+app.use('/api/carts', cartRouter)
+app.use('/products', passportCall('jwt'), productViewRouter)
+app.use('/api/chats', chatRouter)
+app.use('/carts',passportCall('jwt'),cartViewRouter)
+app.use('/mockingproducts', mockingRouter)
+app.use('/loggertest',loggerRouter)
+app.use('/reset-password', resetPasswordRoutes)
 app.use('/docs',SwaggerUiExpress.serve,SwaggerUiExpress.setup(specs))
+app.use('/premium',userPremiumRouter)
+app.use('/admin',passportCall('jwt'),adminRouter)
+app.use('/payment',passportCall('jwt'),paymentRouter)
+app.use('/ticket',ticketRouter)
+app.use('/api/users',passportCall('jwt'),userRouter)
+app.use('/misdatos',passportCall('jwt'),misDatosRouter)
+
+app.use((req, res, next) => {
+    const error = new Error('Ruta no encontrada');
+    error.name = 'NotFoundError';
+    next(error);
+});
+
+app.use(errorMiddleware)
+
+app.use((err, req, res, next) => {
+    if (err.name === 'NotFoundError') {
+        res.status(404).json({ status: 'error', error: err.message });
+    } else {
+        res.status(500).json({ status: 'error', error: 'Error interno del servidor' });
+    }
+});
+
+mongoose.set('strictQuery', false)
 
 try {
-  await mongoose.connect(
-    "mongodb+srv://federicoaraya:cCbvYRYjjNeDJR7v@asgard.0pnjaxo.mongodb.net/",
-    {
-      serverSelectionTimeoutMS: 5000,
-    }
-  );
-  console.log("DB conected");
-  const httpServer = app.listen(8080, () => {
-    console.log("Server UP");
-  });
+    client.connect();
+    console.log("DB conected");
+    const httpServer = app.listen(port, () => {
+        console.log("Server UP");
+        console.log(`http://localhost:${port}/`)
+    });
 
-  const socketServer = new Server(httpServer);
+    const socketServer = new Server(httpServer);
 
-  socketServer.on("connection", (socketClient) => {
-    console.log("User conected");
-    const prod = new ProductManager("./src/data/productos.json");
-    socketClient.on("deleteProd", (prodId) => {
-      const result = prod.deleteProduct(prodId);
-      if (result.error) {
-        socketClient.emit("error", result);
-      } else {
-        socketServer.emit("products", prod.getProducts());
-        socketClient.emit("result", "Producto eliminado");
-      }
-    });
-    socketClient.on("addProd", (product) => {
-      const producto = JSON.parse(product);
-      const result = prod.addProduct(producto);
-      if (result.error) {
-        socketClient.emit("error", result);
-      } else {
-        socketServer.emit("products", prod.getProducts());
-        socketClient.emit("result", "Producto agregado");
-      }
-    });
-    socketClient.on("newMessage", async (message) => {
-      try {
-        let newMessage = await messageModel.create({
-          user: message.email.value,
-          message: message.message,
-        });
-        console.log("app", newMessage);
-        socketServer.emit("emitMessage", newMessage);
-      } catch (error) {
-        console.log(error);
-        socketClient.emit("error", error);
-      }
-    });
-  });
+    socketServer.on("connection", socket => {
+        console.log("New client connected")
+        socket.on("message", async data => {
+            await messagesModel.create(data)
+            let messages = await messagesModel.find().lean().exec()
+            socketServer.emit("logs", messages)
+        })
+    })
+
 } catch (error) {
-  console.log(error);
+    console.log(error);
 }
+
+export default app

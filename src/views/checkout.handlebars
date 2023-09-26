@@ -1,0 +1,11 @@
+<h1>Confirmar Pago</h1>
+<form action="/payment/payment/process-payment" method="post" id="pagar">
+  <button type="submit" id="submit-button">Pagar</button>
+</form>
+
+<script>
+
+  var form = document.getElementById('pagar'); form.addEventListener('submit',
+  function (event) { event.preventDefault();
+  res.render('payment-success',{layout: false}); });
+</script>
