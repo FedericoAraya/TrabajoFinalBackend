@@ -1,6 +1,33 @@
+<body>
   <div class="ticket">
     <h1>Ticket Enviado</h1>
-    <p>Hemos enviado el ticket a su Email.</p>
-    <p>Redireccionando...</p>
+    <p>Redireccionando en <span id="timer">2</span> segundos...</p>
+    <button id="finalizar">Finalizar</button>
   </div>
+
+  <script>
+    let seconds = 2;
+    const timerElement = document.getElementById('timer');
+
+
+
+document.getElementById('finalizar').addEventListener('click', function() {
+    window.location.href = 'https://trabajofinalbackend-production-16c8.up.railway.app/products'
+});
+
+
+
+    const countdown = () => {
+      timerElement.textContent = seconds;
+      seconds--;
+
+      if (seconds < 0) {
+        window.location.href = 'https://trabajofinalbackend-production-16c8.up.railway.app/products';
+      } else {
+        setTimeout(countdown, 3000);
+      }
+    };
+
+    countdown();
+  </script>
  

@@ -81,15 +81,20 @@ export const createSession = async (req, res) => {
       amount: totalCartPrice,
       purchaser: user.email,
     };
-
+    
     const ticket = new TicketModel(ticketData);
     await ticket.save();
 
     cart.products = [];
     console.log(cart);
-    await cart.save();
+
+    await cart.save();    
     res.render('payment-success');
-   
+     res.redirect('/ticket')
+ 
+    
+     
+    
     
   } catch (error) {
     console.error("Error al crear la sesión de pago:", error);
