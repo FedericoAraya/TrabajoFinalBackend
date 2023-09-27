@@ -22,7 +22,7 @@ const resetPasswordController = {
 
       const token = jwt.sign({ user }, jwtPrivateKey, { expiresIn: '1h' });
 
-      const resetLink = `https://trabajofinalbackend-production-16c8.up.railway.app/${token}`;
+      const resetLink = `https://trabajofinalbackend-production-16c8.up.railway.app/reset-password/${token}`;
 
       await emailService.sendPasswordResetEmail(user.email, resetLink); // 
       res.render('reset-password-sent');

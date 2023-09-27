@@ -22,7 +22,7 @@ const initializePassport = () => {
     passport.use('github',new GitHubStrategy({
         clientID: clientId,
         clientSecret: clientSecret,
-        callbackURL: 'https://trabajofinalbackend-production-16c8.up.railway.app/session/githubcallback'
+        callbackURL: 'http://localhost:8080/session/githubcallback'
     },async(accessToken,refreshToken,profile,done)=>{
         try {
             const user = await UserModel.findOne({email:profile._json.email})
