@@ -31,8 +31,6 @@ import ticketRouter from './router/ticket.router.js'
 import userRouter from './router/user.router.js'
 import misDatosRouter from './router/datos.router.js'
 
-
-
 dotenv.config()
 
 let client = new MongoClient()
@@ -65,9 +63,9 @@ app.engine('handlebars', handlebars.engine())
 app.set('views', './src/views')
 app.set('view engine', 'handlebars')
 app.use(express.static('./src/public'))
-app.get('/', (request, response) => {
-    response.send('Desafio 03!')
-})
+
+
+
 
 app.use(session({
     secret: 'faraya',
@@ -78,8 +76,9 @@ initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use('/session', sessionRouter)
 
+
+app.use('/session', sessionRouter)
 app.use('/api/products', passportCall('jwt'), productRouter)
 app.use('/api/carts', cartRouter)
 app.use('/products', passportCall('jwt'), productViewRouter)
